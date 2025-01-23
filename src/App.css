@@ -1,0 +1,47 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+h1 {
+  color: greenyellow;
+}
+
+input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px 20px;
+  background-color:green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+  color:blue;
+}
+
+.error-message {
+  color: red;
+}
+
+.qr-image {
+  margin-top: 20px;
+  max-width: 200px;
+  height: auto;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 20px;
+}
