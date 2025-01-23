@@ -1,79 +1,68 @@
-import './App.css'; 
-import { useState } from 'react';  
+import React, { useState } from 'react';
+import './App.css';
 
-function App() {   
-  const [img, setImg] = useState(null);   
-  const [load, setLoad] = useState(false);   
-  const [qrdata, setqrdata] = useState("");   
-  const [error, setError] = useState(null);    
-  const [size, setSize] = useState(200);
+function App() {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [bmi, setBmi] = useState('');
+  const [category, setCategory] = useState('');
 
-  const handleSizeChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value > 0 && value <= 1000) {
-      setSize(value);
+  const calculateBMI = () => {
+    if (weight && height) {
+      const heightInMeters = height / 100;
+      const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+      setBmi(bmiValue);
+
+      // Determine BMI category
+      if (bmiValue < 18.5) setCategory('Underweight');
+      else if (bmiValue >= 18.5 && bmiValue < 25) setCategory('Normal weight');
+      else if (bmiValue >= 25 && bmiValue < 30) setCategory('Overweight');
+      else setCategory('Obese');
     }
   };
 
-  const Qr_gen = () => {     
-    if (!qrdata) {
-      setError('Please enter data for the QR code.');       
-      return;     
-    }
-    if (!size || size <= 0 || size > 1000) {
-      setError('Please enter a valid size between 1 and 1000 pixels.');
-      return;
-    }
-    setLoad(true);     
-    setError(null); 
-    const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrdata)}&size=${size}x${size}`;
-    setImg(url);     
-    setLoad(false);   
-  };    
+  const handleReset = () => {
+    setWeight('');
+    setHeight('');
+    setBmi('');
+    setCategory('');
+  };
 
-  return (     
+  return (
     <div className="App">
-      <div className="container">       
-        <h1>QR Code Generator</h1>
+      <div className="calculator-container">
+        <h1>BMI Calculator</h1>
         <div className="input-group">
-          <label htmlFor="datainput">Enter Data</label>       
-          <input         
-            type="text"         
-            id="datainput"         
-            placeholder="Enter data for QR code"         
-            onChange={(e) => setqrdata(e.target.value)}         
-            value={qrdata}       
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="size">QR Code Size (pixels)</label>
+          <label>Weight (kg):</label>
           <input
             type="number"
-            id="size"
-            min="1"
-            max="1000"
-            placeholder="Enter size (e.g., 200)"
-            value={size}
-            onChange={handleSizeChange}
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            placeholder="Enter weight"
           />
-          <span className="size-hint">Enter a value between 1 and 1000 pixels</span>
         </div>
-
-        <button className="gen-btn" onClick={Qr_gen}>Generate QR Code</button>
-
-        {error && <p className="error-message">{error}</p>}
-        {load && <p className="loading">Generating QR code...</p>}
-        
-        {img && (
-          <div className="qr-container">
-            <img src={img} alt="QR Code" className="qr-image" />
-            <p className="size-info">Size: {size}x{size} pixels</p>
+        <div className="input-group">
+          <label>Height (cm):</label>
+          <input
+            type="number"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            placeholder="Enter height"
+          />
+        </div>
+        <div className="button-group">
+          <button onClick={calculateBMI}>Calculate BMI</button>
+          <button onClick={handleReset} className="reset-btn">Reset</button>
+        </div>
+        {bmi && (
+          <div className="result">
+            <h2>Your BMI: {bmi}</h2>
+            <p className="category">Category: <span>{category}</span></p>
           </div>
         )}
-      </div>     
-    </div>   
-  ); 
-}  
+      </div>
+    </div>
+  );
+}
 
 export default App;
